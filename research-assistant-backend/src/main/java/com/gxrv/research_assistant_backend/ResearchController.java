@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/research")
 @CrossOrigin(origins = "*")
 public class ResearchController {
-	private ResearchService researchService;
+	private final ResearchService researchService;
 	
 	public ResearchController(ResearchService researchService) {
 		this.researchService = researchService;

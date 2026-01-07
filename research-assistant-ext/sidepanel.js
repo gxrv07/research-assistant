@@ -38,7 +38,6 @@ async function summarizeText() {
   try {
     loadingSpinner.style.display = "block";
     resultContainer.style.display = "none";
-    dummyText.style.display = "none";
 
     const [tab] = await chrome.tabs.query({
       active: true,
