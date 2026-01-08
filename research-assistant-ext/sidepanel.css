@@ -1,15 +1,19 @@
+/* CSS Variables for light theme default */
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(222.2 84% 4.9%);
+  --hover: hsl(0 0% 94%);
   --card: hsl(0 0% 100%);
-  --card-foreground: hsl(222.2 84% 4.9%);
   --border: hsl(214.3 31.8% 91.4%);
-  --accent: hsl(262.1 83.3% 57.8%);
-  --accent-foreground: hsl(210 40% 98%);
   --primary: hsl(221.2 83.2% 53.3%);
   --primary-foreground: hsl(210 40% 98%);
   --muted-foreground: hsl(215.4 16.3% 46.9%);
   --ring: hsl(262.1 83.3% 57.8%);
+  --border-radius: 8px;
+  --font-size: 14px;
+  --cancel-bg: hsl(0 0% 94%); /* matches --hover */
+  --cancel-text: hsl(222.2 84% 4.9%); /* matches --foreground */
+  --cancel-hover: hsl(0 0% 90%);
 }
 
 body {
@@ -18,6 +22,12 @@ body {
   background: var(--background);
   color: var(--foreground);
   padding: 16px;
+  font-size: var(--font-size);
+}
+
+p {
+  margin: 0;
+  padding: 0;
 }
 
 .scroll-area {
@@ -37,7 +47,6 @@ body {
 .content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   padding: 16px 0px;
 }
 
@@ -53,17 +62,14 @@ body {
   align-items: center;
   gap: 8px;
   margin-bottom: 12px;
-  font-size: 14px;
   font-weight: 600;
 }
 
 .section-heading {
-  font-size: 14px;
   font-weight: 600;
 }
 
 .muted-text {
-  font-size: 14px;
   color: var(--muted-foreground);
   line-height: 1.6;
 }
@@ -75,8 +81,8 @@ body {
   border-radius: 6px;
   border: 1px solid var(--border);
   background: var(--card);
-  font-size: 14px;
   resize: none;
+  color: var(--foreground) !important;
 }
 
 .textarea:focus {
@@ -85,54 +91,27 @@ body {
 }
 
 .primary-btn {
+  float: right;
   margin-top: 12px;
-  width: 100%;
+  width: 35%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
+  padding: 8px;
   font-weight: 500;
   background: var(--primary);
   color: var(--primary-foreground);
   border: none;
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   cursor: pointer;
 }
 
 .primary-btn:disabled {
   opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.notes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.note-item {
-  border: 1px solid var(--border);
-  background: var(--card);
-  padding: 12px;
-  border-radius: 8px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.note-item:hover {
-  background: hsla(262.1, 83.3%, 57.8%, 0.05);
 }
 
 .note-content {
-  font-size: 14px;
   margin-bottom: 6px;
-}
-
-.note-time {
-  font-size: 12px;
-  color: var(--muted-foreground);
 }
 
 .icon {
@@ -156,13 +135,7 @@ body {
   color: #1a73e8;
 }
 
-.actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-button {
+.summarize-btn {
   padding: 10px 20px;
   background-color: #1a73e8;
   color: white;
@@ -173,7 +146,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+.summarize-btn:hover {
   background-color: #0c5db9;
 }
 
@@ -181,19 +154,17 @@ button:hover {
   width: 100%;
   height: 100px;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 5px;
-  font-size: 14px;
   resize: vertical;
 }
 
 #result {
   margin-top: 20px;
   padding: 15px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   border-radius: 5px;
-  background-color: #f9f9f9;
-  font-size: 14px;
+  background-color: var(--card);
   line-height: 1.6;
 }
 
@@ -236,21 +207,150 @@ button:hover {
   }
 }
 
-body.default {
-  background-color: #ffffff;
-  color: #000000;
+.button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
 }
 
-body.dark {
-  background-color: #121212;
-  color: #ffffff;
+/* Toast notification styles */
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+  pointer-events: none;
+  max-width: 90%;
+  text-align: center;
+  transform: translateX(-50%) translateY(-20px);
 }
 
-body.dark button {
-  background-color: #333333;
-  color: #ffffff;
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
-body.dark button:hover {
-  background-color: #555555;
+/* Custom Popup Modal Styles */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: var(--background);
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 90%;
+  max-width: 300px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.hidden {
+  display: none;
+}
+
+.okBtn {
+  background: hsl(0 84% 60%);
+  color: hsl(0 0% 100%);
+}
+
+.okBtn:hover {
+  background: hsl(0 84% 52%);
+}
+
+.cancelBtn {
+  background: var(--cancel-bg);
+  color: var(--cancel-text);
+}
+
+.cancelBtn:hover {
+  background: var(--cancel-hover);
+}
+
+.notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* spacing between notes */
+}
+
+.note-card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  padding: 12px 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.note-card:hover {
+  border-color: var(--ring);
+  background-color: var(--hover);
+}
+
+.note-text {
+  margin: 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* limit to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.note-text.expanded {
+  display: block;
+  -webkit-line-clamp: unset; /* remove the 2-line limit */
+  overflow: visible;
+}
+
+.section-divider {
+  border: none;
+  height: 1px;
+  margin: 12px 0;
+
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--border),
+    transparent
+  );
+}
+
+/* Dark theme variables */
+.dark-theme {
+  --background: hsl(222 22% 12%);
+  --foreground: hsl(210 40% 98%);
+  --hover: hsl(222 22% 18%);
+  --card: hsl(222 22% 18%);
+  --border: hsl(210 16% 24%);
+  --primary: hsl(221.2 83.2% 53.3%);
+  --primary-foreground: hsl(210 40% 98%);
+  --muted-foreground: hsl(210 16% 60%);
+  --ring: hsl(262.1 83.3% 57.8%);
+  --cancel-bg: hsl(222 22% 18%);
+  --cancel-text: hsl(210 40% 98%);
+  --cancel-hover: hsl(222 22% 22%);
 }
